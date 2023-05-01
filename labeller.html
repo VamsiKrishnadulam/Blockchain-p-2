@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js"
+        integrity="sha256-nWBTbvxhJgjslRyuAKJHK+XcZPlCnmIAAMixz6EefVk=" crossorigin="anonymous"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+
+    <style>
+        .navbar-toggler {
+            border-color: white;
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0, 128, 0, 0.8)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+        }
+
+        form {
+            border: solid black;
+            /* border-width: 10px; */
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body onload="connectMetamask()">
+    <nav class="navbar navbar-expand-lg bg-dark">
+        <div class="container-fluid">
+            <div class="navbar-brand text-white" href="#">PMS</div>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="d-flex justify-content-end">
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <div class="nav-item">
+                        <button class="btn btn-dark" onclick="window.open('EndUserReportBugs.html')">End User</button>
+                      </div>
+                      <div class="nav-item">
+                        <button class="btn btn-dark" onclick="window.open('labeller.html')">Labeller</button>
+                      </div>
+                      <div class="nav-item">
+                        <button class="btn btn-dark" onclick="window.open('Adminfromlabeller.html')">Admin</button>
+                      </div>
+                      <div class="nav-item">
+                        <button class="btn btn-dark" onclick="window.open('Patchcreationdeveloper.html')">Developer</button>
+                      </div>
+                      <div class="nav-item">
+                        <button class="btn btn-dark" onclick="window.open('verifier.html')">Verifier</button>
+                      </div>
+                      <div class="nav-item">
+                        <button class="btn btn-dark" onclick="window.open('Aboutus.html')">ABOUT US</button>
+                      </div>
+                      <!-- <div class="nav-item">
+                          <button class="btn btn-dark" onclick="window.open('Register.html')">Register</button>
+                        </div> -->
+                      <div class="nav-item">
+                        <button class="btn btn-dark" onclick="window.open('page1.html')">
+                          LOG-IN
+                        </button>
+                      </div>
+                      <div class="nav-item">
+                        <button class="btn btn-dark" onclick="window.open('contact.html')">
+                          CONTACT US
+                        </button>
+                      </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </nav>
+    <div id="TransactionSuccessfull">
+
+    </div>
+    <br><br><br><br>
+    <div class="container">
+        <div class="card text-center">
+            <div class="card-header">
+                <ul class="nav nav-pills card-header-pills">
+                    <li class="nav-item mx-2">
+                        <button class="btn btn-dark" >Label bugs</button>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="container">
+                    <div class=" d-flex align-items-end">
+                        <div class="dropdown row mx-auto">
+                            <!-- <label for="mySelect" class="col">
+                                <h5>Select Software </h5>
+                            </label> -->
+                            <select id="mySelect" class="form-control col-6" onchange="recievefeedback() ">
+                                <option value="Select Software" selected>Select Software</option>
+                                <option value="Windows11">Windows11</option>
+                                <option value="Windows10">Windows10</option>
+                                <option value="Mac12">Mac12</option>
+                                <option value="Mac11">Mac11</option>
+                              </select>
+                            
+                        </div>
+                    </div>
+                    <div class="bugs_label input-group mt-5 mb-5" id="bugs_label">
+                    </div>
+                    <div>
+                        <button class="btn btn-dark" onclick="setprioritybugsfeatures()">Label Bugs and
+                            Features</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br><br><br>
+    <h4 id="account">
+
+    </h4>
+    <h4 id="connection">
+  
+    </h4>
+    <script>
+        let account;
+        // const Web3 = require('web3');
+        // const fs = require('fs');
+        // const solc = require('solc');
+
+        // Compile the contract
+        // const contractSource = fs.readFileSync('hello.sol', 'utf8');
+        // const contractCompiled = solc.compile(contractSource, 1);
+        // const contractABI = JSON.parse(contractCompiled.contracts[':HelloWorld'].interface);
+        // const contractBytecode = contractCompiled.contracts[':MyContract'].bytecode;
+        // console.log(contractABI);
+        const connectMetamask = async () => {
+            if (window.ethereum !== "undefined"){
+                const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+                account = accounts[0];
+            }
+            const ABI =[
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [],
+		"name": "admin",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "developer",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string[]",
+				"name": "_bugs",
+				"type": "string[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "_features",
+				"type": "string[]"
+			},
+			{
+				"internalType": "string",
+				"name": "_environmentDetails",
+				"type": "string"
+			}
+		],
+		"name": "feedbacks",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "get",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "environmentDetails",
+						"type": "string"
+					},
+					{
+						"internalType": "string[]",
+						"name": "bugs",
+						"type": "string[]"
+					},
+					{
+						"internalType": "string[]",
+						"name": "features",
+						"type": "string[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "bugspriority",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "featurespriority",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "labelstatus",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "labelstatusfeatures",
+						"type": "uint256[]"
+					}
+				],
+				"internalType": "struct feedback.report[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "labeller",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "reports",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "environmentDetails",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "bug",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "priority",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct feedback.bugsprio[]",
+				"name": "keyvaluepair",
+				"type": "tuple[]"
+			},
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "feature",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "priorityfeature",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct feedback.featuresprio[]",
+				"name": "keyvaluepairfeature",
+				"type": "tuple[]"
+			}
+		],
+		"name": "setbugfeaturePriority",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string[]",
+				"name": "bugsforlabel",
+				"type": "string[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "featuresforlabel",
+				"type": "string[]"
+			}
+		],
+		"name": "setbugfeaturelabel",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "verifier",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+      const Address = "0xbC59E6a52fA17C6bec9a4FDc09a518435cad2297";
+            window.web3 = await new Web3(window.ethereum);
+            window.contract = await new window.web3.eth.Contract(ABI, Address);
+            document.getElementById("account").innerHTML="Account:"+`${account}`;
+        }
+        async function recievefeedback(){
+            window.contract.methods.get().call().then((result) => {
+                console.log(result);
+                cell = document.createElement("ul");
+                const b = document.getElementById("bugs_label");
+                cell.classList.add("list-group", "col-5", "mx-auto");
+                b.appendChild(cell);
+                for (let i = 0; i < result.length; i++) {
+                    for (let j = 0; j < (result[i].bugs.length); j++) {
+                        if (result[i].bugspriority[j] == 0 && document.getElementById("mySelect").value==result[i].environmentDetails ) {
+                            const cell2 = document.createElement("li");
+                            cell2.classList.add("list-group-item", "form-control", "d-flex", "justify-content-between", "align-items-center", "col-9", "d-inline-block");
+                            const cell3 = document.createElement("select");
+                            cell3.classList.add("input-group-append", "my-select", "me-end", "p-2", "d-inline-block");
+                            const values = ["Select Priority", 1, 2, 3, 4, 5];
+                            for (const value of values) {
+                                const option = document.createElement("option");
+                                option.textContent = value;
+                                cell3.appendChild(option);
+                            }
+                            cell3.addEventListener("change", function () {
+                                const selectedOption = this.value;
+                                const selectedbug = result[i].bugs[j];
+                                addDictionarybug(selectedOption, selectedbug);
+                            });
+                            cell2.appendChild(cell3)
+                            cell2.innerHTML = result[i].bugs[j];
+                            cell.appendChild(cell2);
+                            cell.appendChild(cell3);
+                            cell.appendChild(document.createElement("br"))
+                        }
+                    }
+                }
+                cell10 = document.createElement("ul");
+                const b1 = document.getElementById("bugs_label");
+                cell10.classList.add("list-group", "col-5", "mx-auto");
+                b1.appendChild(cell10);
+                for (let i = 0; i < result.length; i++){
+                    for (let j = 0; j < (result[i].features.length); j++) {
+                        if (result[i].featurespriority[j] == 0 &&  document.getElementById("mySelect").value==result[i].environmentDetails ) {
+                            const cell2 = document.createElement("li");
+                            cell2.classList.add("list-group-item", "form-control", "d-flex", "justify-content-between", "align-items-center", "col-9", "d-inline-block");
+                            const cell3 = document.createElement("select");
+                            cell3.classList.add("input-group-append", "my-select", "me-end", "p-2", "d-inline-block");
+                            const values = ["Select Priority", 1, 2, 3, 4, 5];
+                            for (const value of values) {
+                                const option = document.createElement("option");
+                                option.textContent = value;
+                                cell3.appendChild(option);
+                            }
+                            cell3.addEventListener("change", function () {
+                                const selectedOption = this.value;
+                                const selectedfeature = result[i].features[j];
+                                addDictionaryfeature(selectedOption, selectedfeature);
+                            });
+                            cell2.appendChild(cell3);
+                            cell2.innerHTML = result[i].features[j];
+                            cell10.appendChild(cell2);
+                            cell10.appendChild(cell3);
+                            cell10.appendChild(document.createElement("br"))
+                        }
+                    }
+                }
+
+            })
+        }
+        const bugsdict = {};
+        const addDictionarybug = (selectedOption, selectedbug) => {
+            bugsdict[selectedbug] = selectedOption;
+
+        }
+        const featuredict = {};
+        const addDictionaryfeature = (selectedOption, selectedfeature) => {
+            featuredict[selectedfeature] = selectedOption;
+        }
+        const setprioritybugsfeatures = () => {
+            console.log(bugsdict);
+            console.log(featuredict);
+            if (Object.keys(bugsdict).length != 0 && Object.keys(featuredict).length != 0) {
+                window.contract.methods.setbugfeaturePriority(Object.entries(bugsdict), Object.entries(featuredict)).send({ from: account }).then((result) => {
+        console.log(result);
+        const  transactionsuccess= document.getElementById('TransactionSuccessfull');
+       const div=document.createElement('div')
+       div.classList.add("alert","alert-primary");
+       div.role="alert";
+       
+       div.innerHTML="Transaction Successfull with Transaction ID - "+`${result.transactionHash}`
+       transactionsuccess.appendChild(div)
+       setTimeout(function() {
+    
+         window.location.reload();
+  }, 3000); 
+      });
+            }
+        }
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
