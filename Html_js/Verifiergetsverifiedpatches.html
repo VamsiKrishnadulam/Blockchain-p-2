@@ -26,7 +26,7 @@
 <body onload="connectMetamask()">
 	<nav class="navbar navbar-expand-lg bg-dark">
 		<div class="container-fluid">
-			<div class="navbar-brand text-white" href="#">PMS</div>
+			<button class="navbar-brand text-white btn btn-dark" onclick="showimage()" href="#">PMS</button>
 
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
 				aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,41 +36,45 @@
 				<div class="collapse navbar-collapse" id="navbarNavDropdown">
 					<div class="nav-item">
 						<button class="btn btn-dark" onclick="window.open('EndUserReportBugs.html')">End User</button>
-					  </div>
-					  <div class="nav-item">
-                        <button class="btn btn-dark" onclick="window.open('labeller.html')">Labeller</button>
-                      </div>
-					  <div class="nav-item">
+					</div>
+					<div class="nav-item">
+						<button class="btn btn-dark" onclick="window.open('labeller.html')">Labeller</button>
+					</div>
+					<div class="nav-item">
 						<button class="btn btn-dark" onclick="window.open('Adminfromlabeller.html')">Admin</button>
-					  </div>
-					  <div class="nav-item">
-						<button class="btn btn-dark" onclick="window.open('Patchcreationdeveloper.html')">Developer</button>
-					  </div>
-					  <div class="nav-item">
+					</div>
+					<div class="nav-item">
+						<button class="btn btn-dark"
+							onclick="window.open('Patchcreationdeveloper.html')">Developer</button>
+					</div>
+					<div class="nav-item">
 						<button class="btn btn-dark" onclick="window.open('verifier.html')">Verifier</button>
-					  </div>
-					  <div class="nav-item">
+					</div>
+					<div class="nav-item">
 						<button class="btn btn-dark" onclick="window.open('Aboutus.html')">ABOUT US</button>
-					  </div>
-					  <!-- <div class="nav-item">
-						  <button class="btn btn-dark" onclick="window.open('Register.html')">Register</button>
-						</div> -->
-					  <div class="nav-item">
+					</div>
+					<!-- <div class="nav-item">
+				  <button class="btn btn-dark" onclick="window.open('Register.html')">Register</button>
+				</div> -->
+					<div class="nav-item">
 						<button class="btn btn-dark" onclick="window.open('page1.html')">
-						  LOG-IN
+							LOG-IN
 						</button>
-					  </div>
-					  <div class="nav-item">
+					</div>
+					<div class="nav-item">
 						<button class="btn btn-dark" onclick="window.open('contact.html')">
-						  CONTACT US
+							CONTACT US
 						</button>
-					  </div>
+					</div>
 				</div>
 			</div>
 		</div>
 		</div>
 	</nav>
-	<h3>Admin Tracking Patch details</h3>
+	<div id="TransactionSuccessfull">
+
+	</div>
+	<div class="container"><div id="showimage"></div></div>
 	<br><br><br><br>
 	<div id="patchdata">
 
@@ -78,45 +82,33 @@
 	<div class="container">
 		<div class="card text-center">
 			<div class="card-header">
-				<ul class="nav nav-pills card-header-pills">
-					<li class="nav-item mx-2 col-sm">
-                        <button class="btn btn-dark" onclick="window.open('Adminfromlabeller.html')">Admin Request Form
-                        </button>
-                    </li>
-                    <li class="nav-item mx-2 col-sm">
-                        <button class="btn btn-dark" onclick="window.open('adminPatchfromverifier.html')">Deploy
-                            Patches</button>
-                    </li>
-                    <li class="nav-item mx-2 col-sm">
-                        <button class="btn btn-dark" onclick="window.open('admingetsdetails.html')">Tracking
-                            Patches</button>
-                    </li>
-                    <li class="nav-item mx-2 col-sm">
-                        <button class="btn btn-dark" onclick="window.open('getDownloadHistory.html')">Get download History
-                        </button>
-                    </li>
+				<ul class="nav nav-pills card-header-pills d-flex justify-content-evenly">
+					<li class="nav-item mx-2">
+						<button class="btn btn-dark" onclick="window.open('verifier.html')">Yet To Verify</button>
+					</li>
+					<li class="nav-item mx-2">
+						<button class="btn btn-dark" onclick="window.open('Verifiergetsverifiedpatches.html')"> Verified/Rejected</button>
+					</li>
 				</ul>
 			</div>
 			<br>
-
 			<div id="patchdetails">
 
 			</div>
 
 			<br>
 			<div class="table-responsive">
-						<table id="table2" class="table table-striped table-borderless table-responsive">
+			<table id="table1" class="table table-striped table-bordered">
 				<thead class="thead-dark">
 					<tr>
 						<th scope="col">S.No</th>
-						<th scope="col">Patch Name</th>
-						<!-- <th scope="col">Bug Name</th> -->
-						<!-- <th scope="col">System Version</th> -->
+						<th scope="col">Patch No</th>
+						<th scope="col">Download Patch</th>
 						<th scope="col">Patch Platform</th>
 						<th scope="col">Patch Features</th>
 						<th scope="col">Registered Time</th>
-						<th scope="col">verificationstatus</th>
-						<th scope="col">Deployment status</th>
+						<th scope="col">Accept/Reject</th>
+
 					</tr>
 				</thead>
 				<tbody id="tbody">
@@ -126,19 +118,23 @@
 			</div>
 		</div>
 	</div>
+
 	<link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
 	<script src="https://ajax.googleapis.com//ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
 	<script>
+
 
 
 		let account;
 		const connectMetamask = async () => {
+
 			if (window.ethereum !== "undefined") {
 				const accounts = await ethereum.request({ method: "eth_requestAccounts" });
 				account = accounts[0];
 			}
-			const ABI = [
+			const ABI2 = [
 	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
@@ -594,59 +590,90 @@
 		"type": "function"
 	}
 ];
-				const Address = "0x58d9825e8Cb33e78989FD76663A5774fB280bF4c";
+				const Address2 = "0x58d9825e8Cb33e78989FD76663A5774fB280bF4c";
 			window.web3 = await new Web3(window.ethereum);
-			window.contract = await new window.web3.eth.Contract(ABI, Address);
+			window.contract = await new window.web3.eth.Contract(ABI2, Address2);
 			recievepatchdata();
 		}
 		async function recievepatchdata() {
 			window.contract.methods.getdetails().call().then((result) => {
 				console.log(result);
 				const tbody = document.getElementById("tbody");
-				let k=1;
-				for (let i = 0; i < result.length; i++) {
-					const row = document.createElement("tr");
-					const cell1 = document.createElement("td");
-					cell1.innerHTML = k;
-					const cell2 = document.createElement("td");
-					cell2.innerHTML = result[i][0];
-					
-					const cell4 = document.createElement("td");
-					cell4.innerHTML = result[i][2];
-					const cell5 = document.createElement("td");
-					cell5.innerHTML = result[i][3];
-					// const cell6 = document.createElement("td");
-					// cell6.innerHTML = result[i][4];
-					const cell7 = document.createElement("td");
-					const milliseconds = result[i][4] * 1000;
-					const dateObject = new Date(milliseconds);
-					const formattedTime = dateObject.toLocaleString();
-					cell7.innerHTML = formattedTime;
-					const cell8 = document.createElement("td");
-					cell8.innerHTML = result[i][5];
-					const cell9 = document.createElement("td");
-					cell9.innerHTML = result[i].deploymentstatus;
-					row.appendChild(cell1);
-					row.appendChild(cell2);
-					
-					row.appendChild(cell4);
-					row.appendChild(cell5);
-					// row.appendChild(cell6);
-					row.appendChild(cell7);
-					row.appendChild(cell8);
-					row.appendChild(cell9);
-					tbody.appendChild(row);
-					k++
-				}
-			}
-			).then(() => {
-				console.log(document.getElementById("table2"))
-				$(function () {
-					$('#table2').DataTable();
-				})
+				result.map((myStruct, index) => {
+					if (myStruct.verificationstatus != "IN PROGRESS") {
+						const row = document.createElement("tr");
+						const cell1 = document.createElement("td");
+						cell1.innerHTML = index + 1;
+						const cell2 = document.createElement("td");
+						cell2.innerHTML = myStruct.patchname;
+						const cell3 = document.createElement("td");
+						const cell10 = document.createElement("button");
+						cell10.classList.add("btn", "btn-dark");
+						cell10.textContent = "Download Patch"
+						cell10.addEventListener("click", () => {
+							const fileBlob = new Blob([new Uint8Array(web3.utils.hexToBytes(myStruct.fileData))], { type: 'application/octet-stream' });
+							const fileUrl = URL.createObjectURL(fileBlob);
+							const downloadLink = document.createElement('a');
+							downloadLink.href = fileUrl;
+							downloadLink.download = 'file.txt';
+							downloadLink.click();
+						});
+						cell3.appendChild(cell10);
+						const cell5 = document.createElement("td");
+						cell5.innerHTML = myStruct.patchplatform;
+
+						const cell6 = document.createElement("td");
+						cell6.innerHTML = myStruct.patchfeatures;
+						const cell7 = document.createElement("td");
+
+						const timestamp = myStruct.time;
+						const milliseconds = timestamp * 1000;
+						const dateObject = new Date(milliseconds);
+						const formattedTime = dateObject.toLocaleString();
+						console.log(formattedTime);
+						cell7.innerHTML = formattedTime;
+						console.log(cell7);
+						const cell8 = document.createElement("td");
+						cell8.textContent = myStruct.verificationstatus;
+						// cell8.classList.add("btn", "bg-success");
+						// cell8.onclick = function () {
+						// 	verified(myStruct.patchname);
+						// };
+						
+						row.appendChild(cell1);
+						row.appendChild(cell2);
+						row.appendChild(cell3);
+						row.appendChild(cell5);
+						row.appendChild(cell6);
+						row.appendChild(cell7);
+						row.appendChild(cell8);
+						// row.appendChild(cell9);
+						tbody.appendChild(row);
+					}
+				});
+
+				
 			})
+			
+
 		}
+		const showimage = () => {
+				document.getElementById("showimage").innerHTML = '<img src="Projectprocessflow.jpg">';
+				const close=document.createElement("btn");
+				close.classList.add("btn","btn-dark")
+				close.addEventListener('click',()=>{
+					document.getElementById("showimage").innerHTML="";
+				})
+				close.textContent="close";
+				document.getElementById("showimage").appendChild(close);
+			}
+		
 	</script>
+	<!-- <script>
+		$(document).ready(function() {
+  $('#table').DataTable();
+});
+	</script> -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
 		crossorigin="anonymous"></script>

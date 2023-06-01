@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js"
+        integrity="sha256-nWBTbvxhJgjslRyuAKJHK+XcZPlCnmIAAMixz6EefVk=" crossorigin="anonymous"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+
+    <style>
+        .navbar-toggler {
+            border-color: white;
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0, 128, 0, 0.8)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+
+<body onload="connectMetamask()">
+    <nav class="navbar navbar-expand-lg bg-dark">
+        <div class="container-fluid">
+            <div class="navbar-brand text-white" href="#">PMS</div>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+
+
+            <div class="d-flex justify-content-end">
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <div class="nav-item">
+                        <button class="btn btn-dark" onclick="window.open('EndUserReportBugs.html')">End User</button>
+                    </div>
+                    <div class="nav-item">
+                        <button class="btn btn-dark" onclick="window.open('labeller.html')">Labeller</button>
+                    </div>
+                    <div class="nav-item">
+                        <button class="btn btn-dark" onclick="window.open('Adminfromlabeller.html')">Admin</button>
+                    </div>
+                    <div class="nav-item">
+                        <button class="btn btn-dark"
+                            onclick="window.open('Patchcreationdeveloper.html')">Developer</button>
+                    </div>
+                    <div class="nav-item">
+                        <button class="btn btn-dark" onclick="window.open('verifier.html')">Verifier</button>
+                    </div>
+                    <div class="nav-item">
+                        <button class="btn btn-dark" onclick="window.open('Aboutus.html')">ABOUT US</button>
+                    </div>
+                    <!-- <div class="nav-item">
+                          <button class="btn btn-dark" onclick="window.open('Register.html')">Register</button>
+                        </div> -->
+                    <div class="nav-item">
+                        <button class="btn btn-dark" onclick="window.open('page1.html')">
+                            LOG-IN
+                        </button>
+                    </div>
+                    <div class="nav-item">
+                        <button class="btn btn-dark" onclick="window.open('contact.html')">
+                            CONTACT US
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </nav>
+    <div id="TransactionSuccessfull">
+
+    </div>
+    <br><br><br><br>
+    <div id="patchdata">
+
+    </div>
+    <div class="container col-4">
+        <select id="mySelect" class="form-control col-6 bg-dark text-white" onchange="recievepatchdata()">
+            <option value="Select Software" selected>Select User</option>
+            <option value="User1">User1</option>
+            <option value="User2">User2</option>
+            <option value="User3">User3</option>
+            <option value="User4">User4</option>
+        </select>
+    </div>
+    <br><br>
+    <div class="container">
+        <div class="card text-center">
+            <div class="card-header">
+
+                <ul class="nav nav-pills card-header-pills">
+
+
+                    <li class="nav-item mx-2 col-sm">
+                        <button class="btn btn-dark" onclick="window.open('EnduserUpdatespage2.html')">updates</button>
+                    </li>
+                    <li class="nav-item mx-2 col-sm">
+                        <button class="btn btn-dark" onclick="window.open('EndUserReportBugs.html')">Report A
+                            Bug</button>
+                    </li>
+
+                </ul>
+            </div>
+
+            <div id="patchdetails">
+
+            </div>
+            <br>
+            <table id="table1" class="table table-striped table-borderless">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">S.No</th>
+                        <th scope="col">Patch Name</th>
+
+                        <th scope="col">Patch Platform</th>
+                        <th scope="col">Patch Features</th>
+                        <th scope="col">Available From</th> Time</th>
+                        <th scope="col">Download Patch</th>
+
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    <!-- Table rows will be added here dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- <script src="verifierjs.js"></script> -->
+    <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com//ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script>
+
+
+        let account;
+        const connectMetamask = async () => {
+            if (window.ethereum !== "undefined") {
+                const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+                account = accounts[0];
+            }
+            const ABI = [
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_patchname",
+				"type": "string"
+			}
+		],
+		"name": "Deployed",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "PatchArray",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "patchname",
+				"type": "string"
+			},
+			{
+				"internalType": "bytes",
+				"name": "fileData",
+				"type": "bytes"
+			},
+			{
+				"internalType": "string",
+				"name": "patchplatform",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "patchfeatures",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "time",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "verificationstatus",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "deploymentstatus",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "patchno",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "requestnumber",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "deployedTimeStamp",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "admin",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "check",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "developer",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_patchname",
+				"type": "string"
+			}
+		],
+		"name": "findandreply",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_patchname",
+				"type": "string"
+			}
+		],
+		"name": "findandreplynotverified",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getdetails",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "patchname",
+						"type": "string"
+					},
+					{
+						"internalType": "bytes",
+						"name": "fileData",
+						"type": "bytes"
+					},
+					{
+						"internalType": "string",
+						"name": "patchplatform",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "patchfeatures",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "time",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "verificationstatus",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "deploymentstatus",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "patchno",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "requestnumber",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "deployedTimeStamp",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct RegisterPatch.Patch[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getdetailsRequest",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string[]",
+						"name": "bugs",
+						"type": "string[]"
+					},
+					{
+						"internalType": "string[]",
+						"name": "features",
+						"type": "string[]"
+					},
+					{
+						"internalType": "string",
+						"name": "date",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "requestno",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "software",
+						"type": "string"
+					}
+				],
+				"internalType": "struct RegisterPatch.request[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "labeller",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"name": "map",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"name": "map2",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "patches",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "requestArray",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "date",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "requestno",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "software",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "result",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "_filedata",
+				"type": "bytes"
+			},
+			{
+				"internalType": "string",
+				"name": "_patchname",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_patchplatform",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_patchfeatures",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_patchno",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_requestnumber",
+				"type": "uint256"
+			}
+		],
+		"name": "setPatch",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string[]",
+				"name": "_bugs",
+				"type": "string[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "_features",
+				"type": "string[]"
+			},
+			{
+				"internalType": "string",
+				"name": "_date",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_requestno",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_software",
+				"type": "string"
+			}
+		],
+		"name": "setRequest",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "verifier",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+				const Address = "0x58d9825e8Cb33e78989FD76663A5774fB280bF4c";
+            window.web3 = await new Web3(window.ethereum);
+            window.contract = await new window.web3.eth.Contract(ABI, Address);
+            const ABI2 =[
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [],
+		"name": "admin",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "developer",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_patchname",
+				"type": "string"
+			}
+		],
+		"name": "getdatausingPatch",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "Username1",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timeofDownload",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct getdownloadHistory2.history[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_username",
+				"type": "string"
+			}
+		],
+		"name": "getdatausinguser",
+		"outputs": [
+			{
+				"internalType": "string[]",
+				"name": "",
+				"type": "string[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "labeller",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "patchmap",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "Username1",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "timeofDownload",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "patchname",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_patchname",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_username",
+				"type": "string"
+			}
+		],
+		"name": "setdata",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "usermap",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "username",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "verifier",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+
+            const Address2 = "0x3A11d65aA2856fF8FE09De47829ce5fE8392015B";
+            window.web3 = await new Web3(window.ethereum);
+            window.contract2 = await new window.web3.eth.Contract(ABI2, Address2);
+            // recievepatchdata();
+        }
+        async function recievepatchdata() {
+            window.contract2.methods.getdatausinguser(document.getElementById("mySelect").value).call().then((res) => {
+
+                console.log(res);
+                window.contract.methods.getdetails().call().then((result) => {
+                    console.log(result);
+
+                    const tbody = document.getElementById("tbody");
+                    let k = 1;
+                    for (let i = 0; i < result.length; i++) {
+                        if (result[i].verificationstatus == "Verified") {
+                            if (result[i].deploymentstatus == "Deployed" && !(res.includes(result[i][0]))) {
+                                const row = document.createElement("tr");
+                                const cell1 = document.createElement("td");
+                                cell1.innerHTML = k;
+                                const cell2 = document.createElement("td");
+                                cell2.innerHTML = result[i][0];
+                                const cell3 = document.createElement("td");
+                                const cell10 = document.createElement("button");
+                                cell10.classList.add("btn", "btn-dark");
+                                cell10.textContent = "Download Patch";
+                                cell10.addEventListener("click", () => {
+									const fileBlob = new Blob([new Uint8Array(web3.utils.hexToBytes(result[i].fileData))], { type: 'application/octet-stream' });
+									const fileUrl = URL.createObjectURL(fileBlob);
+									const downloadLink = document.createElement('a');
+									downloadLink.href = fileUrl;
+									downloadLink.download = 'file.txt';
+									downloadLink.click();
+									window.contract2.methods.setdata(result[i].patchname, document.getElementById("mySelect").value).send({ from: account }).then((result) => {
+                                        const transactionsuccess = document.getElementById('TransactionSuccessfull');
+                                        const div = document.createElement('div')
+                                        div.classList.add("alert", "alert-primary");
+                                        div.role = "alert";
+
+                                        div.innerHTML = "Transaction Successfull with Transaction ID - " + `${result.transactionHash}`
+                                        transactionsuccess.appendChild(div)
+                                        setTimeout(function () {
+
+                                            window.location.reload();
+                                        }, 3000);
+                                    });
+                                });
+                                cell3.appendChild(cell10);
+                                // const cell3 = document.createElement("td");
+                                // cell3.innerHTML = result[i][1];
+                                const cell4 = document.createElement("td");
+                                cell4.innerHTML = result[i][2];
+
+                                const cell5 = document.createElement("td");
+                                cell5.innerHTML = result[i][3];
+
+                                const cell7 = document.createElement("td");
+                                const milliseconds = result[i].deployedTimeStamp * 1000;
+                                const dateObject = new Date(milliseconds);
+                                const formattedTime = dateObject.toLocaleString();
+                                cell7.innerHTML = formattedTime;
+                                row.appendChild(cell1);
+                                row.appendChild(cell2);
+                                row.appendChild(cell4);
+                                row.appendChild(cell5);
+                                row.appendChild(cell7);
+                                row.appendChild(cell3);
+                                tbody.appendChild(row);
+                                k++;
+                            }
+                        }
+                    }
+                }
+                ).then(() => {
+                    console.log(document.getElementById("table1"));
+                    $(function () {
+                        $('#table1').DataTable();
+                    })
+                })
+            })
+
+        }
+
+
+        
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>

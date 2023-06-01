@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js"
+  integrity="sha256-nWBTbvxhJgjslRyuAKJHK+XcZPlCnmIAAMixz6EefVk=" crossorigin="anonymous"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+
+</head>
+
+<body onclick="connectMetamask()">
+    <input type="file" id="file"> files
+    <!-- <button class="btn btn-dark" onclick="set()" id="set">set</button> -->
+    <button class="btn btn-dark" onclick="get()" id="get">get</button>
+    <div id="data"></div>
+    <script>
+
+        let account;
+        const connectMetamask = async () => {
+            if (window.ethereum !== "undefined") {
+                const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+                account = accounts[0];
+            }
+            const ABI = [
+                {
+                    "inputs": [],
+                    "name": "filedata",
+                    "outputs": [
+                        {
+                            "internalType": "bytes",
+                            "name": "",
+                            "type": "bytes"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "getdata",
+                    "outputs": [
+                        {
+                            "internalType": "bytes",
+                            "name": "",
+                            "type": "bytes"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "bytes",
+                            "name": "_filedata",
+                            "type": "bytes"
+                        }
+                    ],
+                    "name": "setfile",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                }
+            ];
+
+            const Address = "0x9877DC2d8844c3f667124b3898a93A104C458ED7";
+            web3 = await new Web3(window.ethereum);
+            contract = await new web3.eth.Contract(ABI, Address);
+
+        }
+        // const fs = require('fs');
+        // async function set(){
+        //   const files=document.getElementById("file1");
+
+
+        //       console.log(files)
+        //     const file=files.files[0];
+        //     //  console.log(file);
+        //     const reader=new FileReader();
+
+        //     // const byteData = Array.from(new Uint8Array(fileData));
+        //     reader.readAsDataURL(file);
+
+        //     reader.onload=async ()=>{
+        //         console.log(reader.result);
+        //         const fileData=new Uint8Array(reader.result);
+        //         console.log(fileData);
+        //         contract.methods.setfile(fileData).send({ from: account }).then((result) => {
+        //             // console.log("amnsbn");
+        //         });
+
+        //     }
+
+        // }
+        async function get() {
+            let fileinput = document.getElementById("file");
+            const file = fileinput.files[0];
+
+            const reader = new FileReader();
+            reader.readAsArrayBuffer(file);
+
+            reader.onload = async () => {
+                const fileData = new Uint8Array(reader.result);
+                let account = (await web3.eth.getAccounts())[0];
+                console.log(fileData);
+                console.log(account);
+                contract.methods.setfile(fileData).send({ from: account }).then(() => {
+                    console.log("Succefully added");
+                }).then(() => {
+                    return contract.methods.getdata().call();
+                }).then((data) =>{
+                    console.log(data);
+                    const fileBlob = new Blob([new Uint8Array(web3.utils.hexToBytes(data))], { type: 'application/octet-stream' });
+                    // const fileBlob = new Blob(new Uint8Array(data));
+                    const fileUrl = URL.createObjectURL(fileBlob);
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = fileUrl;
+                    downloadLink.download = 'vamsi.txt';
+                    downloadLink.click();
+                })
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+
+
+</body>
+
+</html>
+

@@ -15,6 +15,7 @@
 </head>
 
 <body onload="connectMetamask()">
+
 	<nav class="navbar navbar-expand-lg bg-dark">
 		<div class="container-fluid">
 			<div class="navbar-brand text-white" href="#">PMS</div>
@@ -28,7 +29,7 @@
 						<button class="btn btn-dark" onclick="window.open('EndUserReportBugs.html')">End User</button>
 					</div>
 					<div class="nav-item">
-						<button class="btn btn-dark" onclick="window.open('LabellertoDev.html')">Labeller</button>
+						<button class="btn btn-dark" onclick="window.open('labeller.html')">Labeller</button>
 					</div>
 					<div class="nav-item">
 						<button class="btn btn-dark" onclick="window.open('Adminfromlabeller.html')">Admin</button>
@@ -44,8 +45,8 @@
 						<button class="btn btn-dark" onclick="window.open('Aboutus.html')">ABOUT US</button>
 					</div>
 					<!-- <div class="nav-item">
-                          <button class="btn btn-dark" onclick="window.open('Register.html')">Register</button>
-                        </div> -->
+						  <button class="btn btn-dark" onclick="window.open('Register.html')">Register</button>
+						</div> -->
 					<div class="nav-item">
 						<button class="btn btn-dark" onclick="window.open('page1.html')">
 							LOG-IN
@@ -61,6 +62,9 @@
 		</div>
 		</div>
 	</nav>
+	<div id="TransactionSuccessfull">
+
+	</div>
 
 	<br><br><br><br>
 	<div class="container">
@@ -74,8 +78,8 @@
 					</li>
 					<li class="nav-item mx-2 col-sm">
 						<button class="btn btn-dark" onclick="window.open('Patchcreationdeveloper.html')">Register a
-
-							Patch</button>
+							Patch
+						</button>
 					</li>
 					<li class="nav-item mx-2 col-sm">
 						<button class="btn btn-dark" onclick="window.open('Developergetsrejectedpatches.html')">Rejected 
@@ -85,9 +89,86 @@
 
 				</ul>
 			</div>
+			<div class="card-body">
+				<form action="">
+					<div class="container  ">
+						
+						<div class="row">
+							<div class="col-12 col-lg-6 mx-auto">
+								<div class="input-group mb-3 me-3 d-flex align-items-end">
+									<label for="patchname">
+										<h5> Request No : &nbsp </h5>
+									</label>
+									<input type="number" id="RequestNo" class="form-control" placeholder="Request No" readonly>
+									<label class="input-group-text" for="RequestNo">Request No</label>
+								</div>
+							</div>
+						</div>
 
-			<div class="card-body" id="cards">
+						<div class="row">
 
+							<div class="col-12 col-lg-6 mx-auto">
+								<div class="input-group mb-3 me-3 d-flex align-items-end">
+									<label for="patchname">
+										<h5> Upload : &nbsp </h5>
+									</label>
+									<input type="file" class="form-control" id="inputGroupFile">
+									<label class="input-group-text" for="inputGroupFile">Upload</label>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12 col-lg-6 mx-auto">
+								<div class="input-group mb-3 me-3 d-flex align-items-end">
+									<label for="patchname">
+										<h5> Patch Name : &nbsp </h5>
+									</label>
+									<input type="text" id="patchname" class="form-control" placeholder="Patch name">
+									<label class="input-group-text" for="patchname">Patchname</label>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-12 col-lg-6 mx-auto">
+								<div class="input-group mb-3 me-3 d-flex align-items-center">
+									<label for="patchplatform">
+										<h5> Software or platform : &nbsp </h5>
+									</label>
+									<input type="text" class="form-control" id="patchplatform" placeholder="Software" readonly>
+									
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-12 col-lg-6 mx-auto ">
+								<div class="input-group mb-3 me-3 d-flex align-items-end">
+									<label for="patchno">
+										<h5> Patch No : &nbsp </h5>
+									</label>
+									<input class="form-control" type="number" id="patchno" value="0" readonly>
+									<label class="input-group-text" for="patchno">Patch No</label>
+								</div>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-12 col-lg-6 mx-auto">
+								<div class="input-group mb-3 me-3 d-flex align-items-center">
+									<label for="Features">
+										<h5> Patch Features : &nbsp </h5>
+									</label>
+									<textarea type='text' class="form-control" id="Features" name="Features" rows="5"
+										cols="100" placeholder="Features"></textarea>
+									
+								</div>
+							</div>
+						</div>
+						<div>
+							<button class="btn btn-dark" type="button" onclick="registerpatchdetails()">Submit</button>
+						</div>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -95,7 +176,7 @@
 	<script>
 		let account;
 		const connectMetamask = async () => {
-			if (window.ethereum !== "undefined"){
+			if (window.ethereum !== "undefined") {
 				const accounts = await ethereum.request({ method: "eth_requestAccounts" });
 				account = accounts[0];
 			}
@@ -555,92 +636,86 @@
 		"type": "function"
 	}
 ];
-				const Address2 = "0x58d9825e8Cb33e78989FD76663A5774fB280bF4c";
+			const Address2 = "0x58d9825e8Cb33e78989FD76663A5774fB280bF4c";
 			window.web3 = await new Web3(window.ethereum);
 			window.contract = await new window.web3.eth.Contract(ABI2, Address2);
-			recievedata();
-		}
-		const recievedata = async () => {
-			let requestnoarr = [];
-			window.contract.methods.getdetails().call().then((res) => {
-				console.log(res)
-				for (let i = 0; i < res.length; i++) {
-					requestnoarr.push(res[i].requestnumber)
+			
+			var myFlag = localStorage.getItem('myFlag');
+			if(myFlag=="GeneralPage")
+			{
+			var ObjStr = localStorage.getItem("myObj");
+			var Obj = JSON.parse(ObjStr);
+			console.log(Obj.software);
+			document.getElementById('Features').innerHTML='Bugs Solved:';
+			for(let i=0;i<Obj.arrbugs.length;i++){
+				if(i==0){
+					document.getElementById('Features').innerHTML+=Obj.arrbugs[i];
 				}
-			});
-			console.log(requestnoarr)
-			window.contract.methods.getdetailsRequest().call().then((result) => {
+				else{
+			document.getElementById('Features').innerHTML+= ","+Obj.arrbugs[i];
+				}
+			}
+			document.getElementById('Features').innerHTML+="\n"+'Featrues Solved:';
+			for(let j=0;j<Obj.arrfeatures.length;j++){
+				if(Obj.arrbugslength==0){
+					document.getElementById('Features').innerHTML+=Obj.arrfeatures[j];
+				}
+				else{
+			document.getElementById('Features').innerHTML+= ","+Obj.arrfeatures[j];
+				}
+			}
+			document.getElementById('RequestNo').value=Obj.requestnumber;
+			document.getElementById('patchplatform').value=Obj.software;
+		}
+		else if(myFlag=="RejectedPage"){
+			var ObjStr = localStorage.getItem("myObj2");
+			var Obj = JSON.parse(ObjStr);
+			console.log(Obj)
+			console.log(Obj.software);
+			document.getElementById('Features').innerHTML=Obj.features;
+			
+			document.getElementById('RequestNo').value=Obj.requestnumber;
+			document.getElementById('patchplatform').value=Obj.software;
+		}
+
+
+
+			await window.contract.methods.getdetails().call().then((result) => {
 				console.log(result);
-				const cell = document.getElementById("cards");
-				for (let i = result.length - 1; i >= 0; i--){
-					if (!requestnoarr.includes(result[i].requestno)){
-						const card = document.createElement("div");
-						card.classList.add("card", "d-flex", "justify-content-start");
-						const header = document.createElement("h5");
-						header.classList.add("card-header", "d-flex", "justify-content-start");
-						header.innerHTML = "RequestNo" + result[i].requestno;
-						header.classList.add("bg-dark", "text-white");
-						const div2 = document.createElement("div");
-						const body = document.createElement("h5");
-						body.classList.add("card-body", "d-flex", "justify-content-start");
-						body.innerHTML = "Bugs:";
-						for (let j = 0; j < result[i].bugs.length; j++) {
-							if (j == 0) {
-								body.innerHTML += result[i].bugs[j];
-							}
-							else {
-								body.innerHTML += "," + result[i].bugs[j];
-							}
-						}
-						const body2 = document.createElement("h5");
-						body2.classList.add("card-body", "d-flex", "justify-content-start");
-						body2.innerHTML = "Features:";
-						for (let j = 0; j < result[i].features.length; j++) {
-							if (j == 0) {
-								body2.innerHTML += result[i].features[j];
-							}
-							else {
-								body2.innerHTML += "," + result[i].features[j];
-							}
-						}
-						const Date = document.createElement("h5");
-						Date.innerHTML = " Target Date:" + result[i].date;
-						Date.classList.add("card-body", "d-flex", "justify-content-start")
-
-						const div3 = document.createElement("div");
-						div3.classList.add("d-flex", "justify-content-end");
-						const btnstart = document.createElement("button");
-						btnstart.classList.add("btn", "btn-dark", "me-5", "my-4");
-						btnstart.innerHTML = "UPLOAD";
-						// console.log(result[i].bugs);
-						// console.log(result[i].features);
-						btnstart.addEventListener("click", function () {
-							const myObj = {
-								software: result[i].software,
-								requestnumber: result[i][3],
-								arrbugs: result[i].bugs,
-								arrfeatures: result[i].features
-							};
-							var myObjStr = JSON.stringify(myObj);
-							localStorage.setItem('myFlag', 'GeneralPage');
-							localStorage.setItem("myObj", myObjStr);
-							window.open("Patchcreationdeveloper.html");
-						})
-						div3.appendChild(btnstart)
-						card.appendChild(header);
-						header.appendChild(div2);
-						card.appendChild(body);
-						card.appendChild(body2);
-						card.appendChild(Date);
-						card.appendChild(div3)
-						cell.appendChild(card);
-						cell.appendChild(document.createElement("br"));
-					}
-				}
+				document.getElementById("patchno").value = result.length + 1;
 			});
-
+ 
 		}
+		async function registerpatchdetails() {
 
+			let fileinput = document.getElementById("inputGroupFile");
+			const file = fileinput.files[0];
+			const reader = new FileReader();
+			reader.readAsArrayBuffer(file);
+			reader.onload = async ()=>{
+				const fileData = new Uint8Array(reader.result);
+				let account = (await web3.eth.getAccounts())[0];
+				console.log(fileData);
+				const patchname = document.getElementById("patchname").value;
+				const RequestNo = document.getElementById("RequestNo").value;
+				const patchfeatures = document.getElementById("Features").value;
+				const patchplatform = document.getElementById("patchplatform").value;
+				const patchno = document.getElementById("patchno").value;
+				await window.contract.methods.setPatch(fileData, patchname, patchplatform, patchfeatures, patchno,document.getElementById("RequestNo").value).send({ from: account }).then((result) => {
+					const transactionsuccess = document.getElementById('TransactionSuccessfull');
+					const div = document.createElement('div')
+					div.classList.add("alert", "alert-primary");
+					div.role = "alert";
+
+					div.innerHTML = "Transaction Successfull with Transaction ID - " + `${result.transactionHash}`
+					transactionsuccess.appendChild(div)
+					setTimeout(function () {
+
+						window.location.reload();
+					}, 3000);
+				});
+			}
+		}
 
 	</script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"

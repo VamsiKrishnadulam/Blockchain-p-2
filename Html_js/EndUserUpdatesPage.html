@@ -36,36 +36,35 @@
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <div class="nav-item">
                         <button class="btn btn-dark" onclick="window.open('EndUserReportBugs.html')">End User</button>
-                    </div>
-                    <div class="nav-item">
+                      </div>
+                      <div class="nav-item">
                         <button class="btn btn-dark" onclick="window.open('labeller.html')">Labeller</button>
-                    </div>
-                    <div class="nav-item">
+                      </div>
+                      <div class="nav-item">
                         <button class="btn btn-dark" onclick="window.open('Adminfromlabeller.html')">Admin</button>
-                    </div>
-                    <div class="nav-item">
-                        <button class="btn btn-dark"
-                            onclick="window.open('Patchcreationdeveloper.html')">Developer</button>
-                    </div>
-                    <div class="nav-item">
+                      </div>
+                      <div class="nav-item">
+                        <button class="btn btn-dark" onclick="window.open('Patchcreationdeveloper.html')">Developer</button>
+                      </div>
+                      <div class="nav-item">
                         <button class="btn btn-dark" onclick="window.open('verifier.html')">Verifier</button>
-                    </div>
-                    <div class="nav-item">
+                      </div>
+                      <div class="nav-item">
                         <button class="btn btn-dark" onclick="window.open('Aboutus.html')">ABOUT US</button>
-                    </div>
-                    <!-- <div class="nav-item">
-						  <button class="btn btn-dark" onclick="window.open('Register.html')">Register</button>
-						</div> -->
-                    <div class="nav-item">
+                      </div>
+                      <!-- <div class="nav-item">
+                          <button class="btn btn-dark" onclick="window.open('Register.html')">Register</button>
+                        </div> -->
+                      <div class="nav-item">
                         <button class="btn btn-dark" onclick="window.open('page1.html')">
-                            LOG-IN
+                          LOG-IN
                         </button>
-                    </div>
-                    <div class="nav-item">
+                      </div>
+                      <div class="nav-item">
                         <button class="btn btn-dark" onclick="window.open('contact.html')">
-                            CONTACT US
+                          CONTACT US
                         </button>
-                    </div>
+                      </div>
                 </div>
             </div>
         </div>
@@ -81,40 +80,39 @@
             <div class="card-header">
 
                 <ul class="nav nav-pills card-header-pills">
-                    <li class="nav-item mx-2 col-sm">
-                        <button class="btn btn-dark" onclick="window.open('Adminfromlabeller.html')">Admin Request Form
-                        </button>
-                    </li>
-                    <li class="nav-item mx-2 col-sm">
-                        <button class="btn btn-dark" onclick="window.open('adminPatchfromverifier.html')">Deploy
-                            Patches</button>
-                    </li>
-                    <li class="nav-item mx-2 col-sm">
-                        <button class="btn btn-dark" onclick="window.open('admingetsdetails.html')">Tracking
-                            Patches</button>
-                    </li>
-                    <li class="nav-item mx-2 col-sm">
-                        <button class="btn btn-dark" onclick="window.open('getDownloadHistory.html')">Get download
-                            History
-                        </button>
-                    </li>
+        
+        
+                  <li class="nav-item mx-2 col-sm">
+                    <button class="btn btn-dark" onclick="window.open('EndUserUpdatesPage.html')">get updates</button>
+                  </li>
+                  <li class="nav-item mx-2 col-sm">
+                    <button class="btn btn-dark" onclick="window.open('EndUserReportBugs.html')">Report A Bug</button>
+                  </li>
+        
                 </ul>
+              </div>
+           
+            <div id="patchdetails">
+
             </div>
             <br>
-            <div class="container col-6">
-                <select id="mySelect" class="form-control " onchange="function1()">
-                    <option value="Select Patches">Select Patches</option>
-                </select>
-            </div>
-            <br><br>
-            <div class="container col-6" >
-                <h5>Users Who Downloaded The Patch</h5>
-                <div id="Users" >
+            <table id="table1" class="table table-striped table-borderless">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">S.No</th>
+                        <th scope="col">Patch Name</th>
+                        
+                        <th scope="col">Patch Platform</th>
+                        <th scope="col">Patch Features</th>
+                        <th scope="col">Registered Time</th>
+                        <th scope="col">Download Patch</th>
 
-                </div>
-            </div>
-            <br>
-
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    <!-- Table rows will be added here dynamically -->
+                </tbody>
+            </table>
         </div>
     </div>
     <!-- <script src="verifierjs.js"></script> -->
@@ -131,12 +129,7 @@
                 const accounts = await ethereum.request({ method: "eth_requestAccounts" });
                 account = accounts[0];
             }
-			const ABI = [
-	{
-		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
+            const ABI = [
 	{
 		"inputs": [
 			{
@@ -204,24 +197,6 @@
 				"internalType": "uint256",
 				"name": "requestnumber",
 				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "deployedTimeStamp",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "admin",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -235,19 +210,6 @@
 				"internalType": "bool",
 				"name": "",
 				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "developer",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -329,11 +291,6 @@
 						"internalType": "uint256",
 						"name": "requestnumber",
 						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "deployedTimeStamp",
-						"type": "uint256"
 					}
 				],
 				"internalType": "struct RegisterPatch.Patch[]",
@@ -379,19 +336,6 @@
 				"internalType": "struct RegisterPatch.request[]",
 				"name": "",
 				"type": "tuple[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "labeller",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -572,260 +516,12 @@
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "verifier",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
 	}
 ];
-				const Address = "0x58d9825e8Cb33e78989FD76663A5774fB280bF4c";
+
+            const Address = "0x636308f5D1406AE7025d655f59d5fdeb50275961";
             window.web3 = await new Web3(window.ethereum);
             window.contract = await new window.web3.eth.Contract(ABI, Address);
-            const ABI2 =[
-	{
-		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"inputs": [],
-		"name": "admin",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "developer",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_patchname",
-				"type": "string"
-			}
-		],
-		"name": "getdatausingPatch",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "string",
-						"name": "Username1",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "timeofDownload",
-						"type": "uint256"
-					}
-				],
-				"internalType": "struct getdownloadHistory2.history[]",
-				"name": "",
-				"type": "tuple[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_username",
-				"type": "string"
-			}
-		],
-		"name": "getdatausinguser",
-		"outputs": [
-			{
-				"internalType": "string[]",
-				"name": "",
-				"type": "string[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "labeller",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "owner",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "patchmap",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "Username1",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "timeofDownload",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "patchname",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_patchname",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_username",
-				"type": "string"
-			}
-		],
-		"name": "setdata",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "usermap",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "username",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "verifier",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	}
-];
-
-            const Address2 = "0x3A11d65aA2856fF8FE09De47829ce5fE8392015B";
-            window.web3 = await new Web3(window.ethereum);
-            window.contract2 = await new window.web3.eth.Contract(ABI2, Address2);
-
             recievepatchdata();
         }
         async function recievepatchdata() {
@@ -834,51 +530,82 @@
 
                 console.log(result);
 
-                // const tbody = document.getElementById("tbody");
-                const select = document.getElementById("mySelect")
+                const tbody = document.getElementById("tbody");
                 for (let i = 0; i < result.length; i++) {
 
-                    if (result[i][5] == "Verified") {
-                        if (result[i][6] == "Deployed") {
-                            const option1 = document.createElement('option');
-                            option1.text = result[i][0];
+                    if (result[i].verificationstatus == "Verified") {
+                        if (result[i].deploymentstatus == "Deployed") {
+                            const row = document.createElement("tr");
+                            const cell1 = document.createElement("td");
+                            cell1.innerHTML = i + 1;
+                            const cell2 = document.createElement("td");
+                            cell2.innerHTML = result[i][0];
+                            const cell3 = document.createElement("td");
+                            const cell10 = document.createElement("button");
+                            cell10.classList.add("btn", "btn-dark");
+                            cell10.textContent = "Download Patch"
+                            cell10.addEventListener("click", () => {
+                                const fileBlob = new Blob([new Uint8Array(web3.utils.hexToBytes(result[i].fileData))], { type: 'application/octet-stream' });
+                                const fileUrl = URL.createObjectURL(fileBlob);
+                                const downloadLink = document.createElement('a');
+                                downloadLink.href = fileUrl;
+                                downloadLink.download = 'vamsi.txt';
+                                downloadLink.click();
+                            });
+                            cell3.appendChild(cell10);
+                            // const cell3 = document.createElement("td");
+                            // cell3.innerHTML = result[i][1];
+                            const cell4 = document.createElement("td");
+                            cell4.innerHTML = result[i][2];
 
-                            select.appendChild(option1);
+                            const cell5 = document.createElement("td");
+                            cell5.innerHTML = result[i][3];
+
+                            // const cell6 = document.createElement("td");
+                            // cell6.innerHTML = result[i][4];
+
+                            const cell7 = document.createElement("td");
+
+
+                            const milliseconds = result[i][4] * 1000;
+                            const dateObject = new Date(milliseconds);
+                            const formattedTime = dateObject.toLocaleString();
+                            cell7.innerHTML = formattedTime;
+
+                            // const cell9 = document.createElement("td");
+                            // const cell8 = document.createElement("button");
+                            // cell8.textContent = 'Deploy';
+                            // cell8.classList.add("btn", "bg-success");
+                            // cell8.onclick = function () {
+
+                            // 	deployed(result[i][0]);
+                            // }
+                            // cell9.appendChild(cell8);
+
+                            row.appendChild(cell1);
+                            row.appendChild(cell2);
+                            row.appendChild(cell4);
+                            row.appendChild(cell5);
+                            // row.appendChild(cell6);
+                            row.appendChild(cell7);
+                            row.appendChild(cell3);
+
+                            tbody.appendChild(row);
                         }
                     }
                 }
-            })
-        }
-        const function1 = async () => {
-            window.contract2.methods.getdatausingPatch(document.getElementById("mySelect").value).call().then((res) => {
-                console.log(res);
-                const cell = document.getElementById("Users");
-                cell.innerHTML="";
-                // const div=document.createElement("d")
-                const list = document.createElement('ul');
-                for (let i = 0; i < res.length; i++) {
-                    const Item = document.createElement('li');
-                    Item.textContent = `${res[i][0]}`;
-                    Item.classList.add("form-control")
-                    // list.appendChild(Item);
-                    // const Item2 = document.createElement('li');
-                    const timestamp = res[i][1];
-                    const milliseconds = timestamp * 1000;
-                    const dateObject = new Date(milliseconds);
-                    const formattedTime = dateObject.toLocaleString();
-                    console.log(formattedTime);
-
-                    Item.textContent +="-"+ formattedTime;
-                    // Item2.classList.add("form-control");
-                    list.appendChild(Item);
-                }
-                cell.appendChild(list);
+            }).then(() => {
+                console.log(document.getElementById("table1"));
+                $(function () {
+                    $('#table1').DataTable();
+                })
             })
         }
 
 
-
-
+        const deployed = async (patchname) => {
+            await window.contract.methods.Deployed(patchname).send({ from: account });
+        }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"

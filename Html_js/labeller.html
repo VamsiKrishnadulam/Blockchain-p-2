@@ -83,11 +83,16 @@
     <div class="container">
         <div class="card text-center">
             <div class="card-header">
-                <ul class="nav nav-pills card-header-pills">
+                <ul class="nav nav-pills card-header-pills d-flex justify-content-evenly">
                     <li class="nav-item mx-2">
-                        <button class="btn btn-dark" >Label bugs</button>
+                        <button class="btn btn-dark" onclick="window.open('labeller.html')">Label bugs</button>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <button class="btn btn-dark" onclick="window.open('labellerpage2.html')">Labeled bugs</button>
                     </li>
                 </ul>
+
+            
             </div>
             <div class="card-body">
                 <div class="container">
@@ -362,7 +367,7 @@
                 cell = document.createElement("ul");
                 const b = document.getElementById("bugs_label");
                 cell.classList.add("list-group", "col-5", "mx-auto");
-                b.appendChild(cell);
+                b.appendChild(cell); 
                 for (let i = 0; i < result.length; i++) {
                     for (let j = 0; j < (result[i].bugs.length); j++) {
                         if (result[i].bugspriority[j] == 0 && document.getElementById("mySelect").value==result[i].environmentDetails ) {
@@ -425,7 +430,6 @@
         const bugsdict = {};
         const addDictionarybug = (selectedOption, selectedbug) => {
             bugsdict[selectedbug] = selectedOption;
-
         }
         const featuredict = {};
         const addDictionaryfeature = (selectedOption, selectedfeature) => {

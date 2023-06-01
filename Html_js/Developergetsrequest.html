@@ -28,7 +28,7 @@
 						<button class="btn btn-dark" onclick="window.open('EndUserReportBugs.html')">End User</button>
 					</div>
 					<div class="nav-item">
-						<button class="btn btn-dark" onclick="window.open('labeller.html')">Labeller</button>
+						<button class="btn btn-dark" onclick="window.open('LabellertoDev.html')">Labeller</button>
 					</div>
 					<div class="nav-item">
 						<button class="btn btn-dark" onclick="window.open('Adminfromlabeller.html')">Admin</button>
@@ -77,10 +77,10 @@
 
 							Patch</button>
 					</li>
-                    <li class="nav-item mx-2 col-sm">
+					<li class="nav-item mx-2 col-sm">
 						<button class="btn btn-dark" onclick="window.open('Developergetsrejectedpatches.html')">Rejected 
-
-							Patches</button>
+							Patches
+						</button>
 					</li>
 
 				</ul>
@@ -95,7 +95,8 @@
 	<script>
 		let account;
 		const connectMetamask = async () => {
-			if (window.ethereum !== "undefined"){
+			if (window.ethereum !== "undefined")
+			{
 				const accounts = await ethereum.request({ method: "eth_requestAccounts" });
 				account = accounts[0];
 			}
@@ -555,7 +556,7 @@
 		"type": "function"
 	}
 ];
-				const Address2 = "0x58d9825e8Cb33e78989FD76663A5774fB280bF4c";
+			const Address2 = "0x58d9825e8Cb33e78989FD76663A5774fB280bF4c";
 			window.web3 = await new Web3(window.ethereum);
 			window.contract = await new window.web3.eth.Contract(ABI2, Address2);
 			recievedata();
@@ -563,96 +564,76 @@
 		const recievedata = async () => {
 			let requestnoarr = [];
 			window.contract.methods.getdetails().call().then((res) => {
-				console.log(res)
-				for (let i = 0; i < res.length; i++) {
+				console.log(res);
+				for (let i = 0; i < res.length; i++){
 					requestnoarr.push(res[i].requestnumber);
 				}
 			});
-			console.log(requestnoarr);
-			window.contract.methods.getdetails().call().then((result) => {
+			console.log(requestnoarr)
+			window.contract.methods.getdetailsRequest().call().then((result) => {
+				
 				console.log(result);
 				const cell = document.getElementById("cards");
-				for (let i = result.length - 1; i >= 0; i--)
-				{
-					if (result[i].verificationstatus=="Rejected"){
+				for (let i = result.length - 1; i >= 0; i--){
+					if (!requestnoarr.includes(result[i].requestno)){
 						const card = document.createElement("div");
 						card.classList.add("card", "d-flex", "justify-content-start");
 						const header = document.createElement("h5");
 						header.classList.add("card-header", "d-flex", "justify-content-start");
-						header.innerHTML = "RequestNo" + result[i].requestnumber;
-						header.classList.add("bg-danger", "text-white");
+						header.innerHTML = "RequestNo" + result[i].requestno;
+						header.classList.add("bg-dark", "text-white");
 						const div2 = document.createElement("div");
-						const body = document.createElement("h4");
-						body.classList.add("card-body", "d-flex", "justify-content-start","mx-2");
-						body.innerHTML = "Features:"+`${result[i].patchfeatures}`;
-						// for (let j = 0; j < result[i].bugs.length; j++){
-						// 	if (j == 0) {
-						// 		body.innerHTML += result[i];
-						// 	}
-						// 	else {
-						// 		body.innerHTML += "," + result[i];
-						// 	}
-						// }
-						// const body2 = document.createElement("h5");
-						// body2.classList.add("card-body", "d-flex", "justify-content-start");
-						// body2.innerHTML = "Features:";
-						// for (let j = 0; j < result[i].features.length; j++) {
-						// 	if (j == 0) {
-						// 		body2.innerHTML += result[i].features[j];
-						// 	}
-						// 	else {
-						// 		body2.innerHTML += "," + result[i].features[j];
-						// 	}
-						// }
-						// const Date = document.createElement("h5");
-						// Date.innerHTML = " Target Date:" + result[i].date;
-                        const software=document.createElement("h4");
-                        software.innerHTML="Application:"+result[i].patchplatform;
-						software.classList.add("card-body", "d-flex", "justify-content-start","mx-2");
-                        const div=document.createElement("div");
-                        div.classList.add("row");
-                        const cell10 = document.createElement("button");
-						cell10.classList.add("btn", "btn-dark","col-3");
-                        const h5=document.createElement("h4");
-                        h5.innerHTML="Rejected Patch File :";
-                        h5.classList.add("col-3")
-						cell10.textContent = "Download Patch"
-						cell10.addEventListener("click", () => {
-							const fileBlob = new Blob([new Uint8Array(web3.utils.hexToBytes(result[i].fileData))], { type: 'application/octet-stream' });
-							const fileUrl = URL.createObjectURL(fileBlob);
-							const downloadLink = document.createElement('a');
-							downloadLink.href = fileUrl;
-							downloadLink.download = 'file.txt';
-							downloadLink.click();
-						});
-                        div.appendChild(h5);
-                        div.appendChild(cell10);
-                        // const Download=document.createElement()
+						const body = document.createElement("h5");
+						body.classList.add("card-body", "d-flex", "justify-content-start");
+						body.innerHTML = "Bugs:";
+						for (let j = 0; j < result[i].bugs.length; j++) {
+							if (j == 0) {
+								body.innerHTML += result[i].bugs[j];
+							}
+							else {
+								body.innerHTML += "," + result[i].bugs[j];
+							}
+						}
+						const body2 = document.createElement("h5");
+						body2.classList.add("card-body", "d-flex", "justify-content-start");
+						body2.innerHTML = "Features:";
+						for (let j = 0; j < result[i].features.length; j++) {
+							if (j == 0) {
+								body2.innerHTML += result[i].features[j];
+							}
+							else {
+								body2.innerHTML += "," + result[i].features[j];
+							}
+						}
+						const Date = document.createElement("h5");
+						Date.innerHTML = " Target Date:" + result[i].date;
+						Date.classList.add("card-body", "d-flex", "justify-content-start")
+
 						const div3 = document.createElement("div");
 						div3.classList.add("d-flex", "justify-content-end");
 						const btnstart = document.createElement("button");
 						btnstart.classList.add("btn", "btn-dark", "me-5", "my-4");
-						btnstart.innerHTML = "";
+						btnstart.innerHTML = "UPLOAD";
 						// console.log(result[i].bugs);
 						// console.log(result[i].features);
 						btnstart.addEventListener("click", function () {
-							const myObj2 = {
-								software: result[i].patchplatform,
-								requestnumber: result[i].requestnumber,
-								features: result[i].patchfeatures
+							const myObj = {
+								software: result[i].software,
+								requestnumber: result[i][3],
+								arrbugs: result[i].bugs,
+								arrfeatures: result[i].features
 							};
-							// console.log(myObj.software)
-							var myObjStr = JSON.stringify(myObj2);
-                            localStorage.setItem('myFlag', 'RejectedPage');
-							localStorage.setItem("myObj2", myObjStr);
+							var myObjStr = JSON.stringify(myObj);
+							localStorage.setItem('myFlag', 'GeneralPage');
+							localStorage.setItem("myObj", myObjStr);
 							window.open("Patchcreationdeveloper.html");
 						})
 						div3.appendChild(btnstart)
 						card.appendChild(header);
 						header.appendChild(div2);
 						card.appendChild(body);
-						card.appendChild(software);
-						card.appendChild(div);
+						card.appendChild(body2);
+						card.appendChild(Date);
 						card.appendChild(div3)
 						cell.appendChild(card);
 						cell.appendChild(document.createElement("br"));
